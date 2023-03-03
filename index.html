@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>Chat Realtime application</h1>
+    <ul id="chat-message"></ul>
+    <form id="chat-form">
+      <input id="message-input" type="text" />
+      <button type="submit" id="send-message">Send</button>
+    </form>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      const socket = io();
+
+      const chatForm = document.querySelector('#chat-form');
+      const chatInput = document.querySelector('#message-input');
+
+      chatForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+        const message = chatInput.value;
+
+        socket.emit('send-message', { message });
+      });
+
+      const messages = document.querySelector('#chat-message');
+      socket.on('take-data', (message) => {
+        const chatItem = document.createElement('li');
+        chatItem.textContent = message.message;
+
+        messages.appendChild(chatItem);
+      });
+    </script>
+  </body>
+</html>
